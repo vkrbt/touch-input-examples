@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pointer-events: none</title>
+    <style>
+        .text-shadow {
+            width: 300px;
+            background: #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .text-shadow::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            bottom: 0;
+            background: rgba(255, 255, 255, .5);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="text-shadow">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dui lacus, interdum ac lobortis sed, ultricies a orci. Nam vehicula faucibus justo dictum tincidunt. Donec cursus nec orci at dictum. Mauris ac pharetra augue, eget vulputate sapien. In tincidunt massa id tellus ultricies auctor. In et tincidunt quam, vitae placerat libero. Aenean mattis, tortor et mollis efficitur, ligula erat commodo eros, vel viverra eros eros non augue. Vestibulum arcu mauris, dapibus quis ornare eget, vestibulum et sem. Vestibulum pharetra dictum orci vitae convallis.
+    </div>
+</body>
+</html>

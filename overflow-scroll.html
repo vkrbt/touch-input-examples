@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      body,
+      p {
+        margin: 0;
+        text-align: center;
+      }
+
+      .map {
+        min-height: 100vh;
+        max-height: 100vh;
+        overflow-y: scroll;
+        position: relative;
+      }
+
+      .map__inner {
+        position: relative;
+      }
+
+      .map__inner::before {
+        content: "";
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        opacity: 0.2;
+        z-index: -1;
+        background: linear-gradient(
+          to top,
+          red,
+          orange,
+          yellow,
+          green,
+          cyan,
+          blue,
+          violet
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <div class="map">
+      <div id="list" class="map__inner"></div>
+    </div>
+    <script>
+      let list = document.getElementById("list");
+
+      Array.from({ length: 500 }).forEach((item, index) => {
+        let element = document.createElement("p");
+        element.innerText = index + 1;
+        list.appendChild(element);
+      });
+    </script>
+  </body>
+</html>

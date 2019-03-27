@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Event Target</title>
+    <style>
+        * {
+            cursor: none;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+        .grey {
+            background-color: greenyellow;
+            flex-grow: 1;
+            opacity: .8;
+        }
+
+        .grey,
+        .red,
+        .blue {
+            filter: saturate(0);
+        }
+
+        .red,
+        .blue {
+            position: absolute;
+            padding: 20vh 20vw;
+        }
+
+        .red {
+            top: 10vh;
+            left: 5vw;
+            background: red;
+        }
+
+        .blue {
+            bottom: 10vh;
+            right: 5vw;
+            background: blue;
+        }
+
+        #pointer-dot {
+            position: absolute;
+            background-color: #888;
+            border: 3px solid #aaa;
+            opacity: .9;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            pointer-events: none;
+
+            top: -100px;
+            left: -100px;
+            transition: transform 0.1s ease-out;
+        }
+
+        .capture {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 20px;
+            border-radius: 50%;
+            background: red;
+            opacity: 0;
+        }
+
+        .capture::before {
+            content: 'Capture Enabled';
+            position: absolute;
+            right: 0;
+            top: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="grey" id="grey"></div>
+    <div class="red" id="red"></div>
+    <div class="blue" id="blue"></div>
+    <div id="pointer-dot"></div>
+    <div class="capture" id="capture"></div>
+    <p>Press 'Space' to enable pointer capture</p>
+</body>
+<script>
+    let isCaptureEnabled = false;
+
+    let pointerDot = document.getElementById('pointer-dot');
+
+    function setPointerDotPosition(top, right) {
+        pointerDot.style.top = `${top}px`;
+        pointerDot.style.left = `${right}px`;
+    }
+
+    document.body.addEventListener('pointermove', (event) => {
+        setPointerDotPosition(event.clientY, event.clientX);
+    });
+
+    document.body.addEventListener('pointerdown', (event) => {
+        pointerDot.style.transform = `scale(0.8)`
+    });
+
+    document.body.addEventListener('pointerup', (event) => {
+        pointerDot.style.transform = `scale(1)`
+    });
+
+    let redElement = document.getElementById('red');
+
+    redElement.addEventListener('pointermove', (event) => {
+        if (isCaptureEnabled) {
+            redElement.setPointerCapture(event.pointerId);
+        } else {
+            redElement.releasePointerCapture();
+        }
+    });
+
+    let elements = ['grey', 'red', 'blue'].map((elementId) => document.getElementById(elementId));
+
+    elements.forEach((element) => {
+        element.addEventListener('pointerenter', (event) => {
+            event.target.style.filter = 'saturate(1)'
+        });
+
+        element.addEventListener('pointerout', (event) => {
+            event.target.style.filter = 'saturate(0)'
+        });
+    });
+
+
+    let capture = document.getElementById('capture');
+
+    document.addEventListener('keyup', (event) => {
+        if (event.key === ' ') {
+            isCaptureEnabled = !isCaptureEnabled;
+            if (isCaptureEnabled) {
+                capture.style.opacity = 1;
+            } else {
+                capture.style.opacity = 0;
+            }
+        }
+    });
+</script>
+</html>

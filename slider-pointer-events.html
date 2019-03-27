@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Slider</title>
+    <style>
+      body {
+        padding: 32px;
+      }
+
+      .slider {
+        position: relative;
+        width: 300px;
+        height: 32px;
+        border: 2px solid #aaa;
+        border-radius: 2px;
+        overflow: hidden;
+        touch-action: none;
+      }
+
+      .slider__indicator {
+        height: 100%;
+        width: 16px;
+        background-color: #000;
+        pointer-events: none;
+        margin-left: -8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slider" class="slider">
+      <div id="sliderIndicator" class="slider__indicator"></div>
+    </div>
+    <script>
+        class Slider {
+            isMoving = false;
+
+            constructor(element) {
+                this.slider = element;
+                this.sliderIndicator = element.querySelector('#sliderIndicator');
+
+                this.registerEvents();
+            }
+
+            registerEvents() {
+                this.slider.addEventListener("pointerdown", event => {
+                    this.isMoving = true;
+                    this.slider.setPointerCapture(event.pointerId);
+                    this.moveIndicator(event);
+                });
+
+                this.slider.addEventListener("pointerup", event => {
+                    this.isMoving = false;
+                });
+
+                this.slider.addEventListener("pointercancel", event => {
+                    this.isMoving = false;
+                });
+
+                this.slider.addEventListener("pointermove", this.moveIndicator);
+            }
+
+            moveIndicator = (event) => {
+                let isInBounds =(
+                    event.offsetX <= this.slider.clientWidth
+                    && event.offsetX >= 0
+                );
+
+                if (this.isMoving && isInBounds) {
+                    this.sliderIndicator.style.transform = `translateX(${event.offsetX}px)`;
+                }
+            }
+        }
+
+        new Slider(slider);
+    </script>
+  </body>
+</html>

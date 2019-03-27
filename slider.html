@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Slider</title>
+    <style>
+        body {
+            padding: 32px;
+        }
+
+        .slider {
+            position: relative;
+            width: 300px;
+            height: 32px;
+            border: 2px solid #aaa;
+            border-radius: 2px;
+            cursor: pointer;
+            touch-action: none;
+            overflow: hidden;
+        }
+
+        .slider__indicator {
+            height: 100%;
+            width: 16px;
+            background-color: #000;
+            pointer-events: none;
+            margin-left: -8px;
+        }
+
+        .click-highlight {
+            position: fixed;
+            background: red;
+            opacity: .5;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .cursor-track {
+            opacity: 0.5;
+            margin-top: -34px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider" id="slider">
+        <div class="slider__indicator" id="sliderIndicator"></div>
+    </div>
+    <div class="cursor-track">
+        <svg width="316" height="136" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16,16 C300,16 50,120 300,120" stroke-linecap="round" stroke-width="32" stroke="green" fill="transparent"/>
+        </svg>
+    </div>
+    <script>
+        let clickHighlight = document.createElement('div');
+        clickHighlight.classList.add('click-highlight');
+
+        document.addEventListener('pointerdown', (event) => {
+            clickHighlight.style.transform = `translate3d(${event.clientX}, ${event.clientY}, 0)`;
+            document.body.appendChild(clickHighlight);
+        });
+
+        document.addEventListener('pointermove', (event) => {
+            requestAnimationFrame(() => {
+                clickHighlight.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+            });
+        });
+
+        document.addEventListener('pointerup', (event) => {
+            document.body.removeChild(clickHighlight);
+        });
+
+        document.addEventListener('pointercancel', (event) => {
+            document.body.removeChild(clickHighlight);
+        });
+
+        class Slider {
+            isMoving = false;
+
+            constructor(element) {
+                this.slider = element;
+                this.sliderIndicator = element.querySelector('#sliderIndicator');
+
+                this.registerEvents();
+            }
+
+            registerEvents() {
+                this.slider.addEventListener("pointerdown", event => {
+                    this.isMoving = true;
+                    this.slider.setPointerCapture(event.pointerId);
+                });
+
+                this.slider.addEventListener("pointerup", event => {
+                    this.isMoving = false;
+                });
+
+                this.slider.addEventListener("pointercancel", event => {
+                    this.isMoving = false;
+                });
+
+                this.slider.addEventListener("pointermove", this.moveIndicator);
+            }
+
+            moveIndicator = (event) => {
+                let isInBounds =(
+                    event.offsetX <= this.slider.clientWidth
+                    && event.offsetX >= 0
+                );
+
+                if (this.isMoving && isInBounds) {
+                    this.sliderIndicator.style.transform = `translateX(${event.offsetX}px)`;
+                }
+            }
+        }
+
+        new Slider(slider);
+    </script>
+</body>
+</html>

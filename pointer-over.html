@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>pointerover, pointerenter</title>
+    <style>
+        body {
+            padding: 50px;
+        }
+        .yellow,
+        .blue {
+            padding: 50px;
+        }
+
+        .yellow {
+            background: #f7d528;
+        }
+
+        .blue {
+            background: #51a8fa;
+        }
+    </style>
+</head>
+<body>
+    <div id="yellow" class="yellow">
+        <div class="blue"></div>
+    </div>
+    <script>
+        function logEventName(event) {
+            if (event.target === event.currentTarget) {
+                console.log(event.type);
+            }
+        }
+        ['pointerover', 'pointerenter', 'pointerout', 'pointerleave'].forEach((eventName) => {
+            yellow.addEventListener(eventName, logEventName);
+        });
+    </script>
+</body>
+</html>
